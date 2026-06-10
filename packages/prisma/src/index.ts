@@ -4,16 +4,18 @@
 
 
 import pkg from "@prisma/client";
+const { PrismaClient } = pkg;
 import { PrismaPg } from "@prisma/adapter-pg";
 import pg from "pg";
-import dotenv from 'dotenv'
-import path from 'path'
-//@ts-ignore
-const envPath = path.resolve(import.meta.dirname, "../.env");
+import dotenv from "dotenv";
+import path from "path";
 
-dotenv.config({ path: envPath });
-
-const { PrismaClient } = pkg;
+// Load .env only in plain Node.js (import.meta.dirname is undefined in bundlers like Turbopack)
+// @ts-ignore
+if (!process.env.DATABASE_URL && typeof import.meta.dirname === "string") {
+    // @ts-ignore
+    dotenv.config({ path: path.resolve(import.meta.dirname, "../.env") });
+}
 
 const getPrismaClient = () => {
     const connectionString = process.env.DATABASE_URL;
