@@ -9,11 +9,11 @@ jobs:
     name: Deploying everything to staging cluster
     runs-on: ubuntu-latest
     steps:
+      - name: Deploy to Production
         run: |
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" & ~/ssh_key
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/ssh_key
           mkdir -p /home/runner/.ssh
-          ls /home/runner/.ssh 
           touch /home/runner/.ssh/known_hosts
-          echo "${{ secrets.KNOWN_HOSTS }}" &> /home/runner/.ssh/known_hosts
-          chmod 700 /home/runner/ssh_key
-          ssh -i ~/ssh_key root@64.227.147.124 -t "cd week-25-ci-next-app/ && git pull origin production && export PATH=/ root/.nvm/versions/node/v22.13.1/bin:/usr/local/sbin:/usr/ local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/ games:/snap/bin && npm install -g pnpm && pnpm install && pnpm run build && pm2 restart fe-sever && pm2 restart http-sever && pm2 restart ws-sever"
+          echo "${{ secrets.KNOWN_HOSTS }}" > /home/runner/.ssh/known_hosts
+          chmod 600 ~/ssh_key
+          ssh -i ~/ssh_key ubuntu@13.53.245.205 -t "bash -l -c 'cd ~/Deploying-on-AWS && git pull origin production && pnpm install && pnpm run build && pm2 restart fe-sever && pm2 restart http-sever && pm2 restart ws-sever'"
