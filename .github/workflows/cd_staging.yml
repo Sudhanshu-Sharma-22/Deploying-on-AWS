@@ -16,4 +16,4 @@ jobs:
           touch /home/runner/.ssh/known_hosts
           echo "${{ secrets.KNOWN_HOSTS }}" > /home/runner/.ssh/known_hosts
           chmod 600 ~/ssh_key
-          ssh -i ~/ssh_key ubuntu@13.53.235.114 -t "bash -l -c 'cd ~/Deploying-on-AWS && git pull origin main && pnpm install && pnpm run build && pm2 restart fe-sever && pm2 restart http-sever && pm2 restart ws-sever'"
+          ssh -o StrictHostKeyChecking=no -i ~/ssh_key ubuntu@13.53.235.114 -t "bash -l -c 'cd ~/Deploying-on-AWS && git pull origin main && pnpm install && pnpm run build && pm2 restart fe-sever && pm2 restart http-sever && pm2 restart ws-sever'"
