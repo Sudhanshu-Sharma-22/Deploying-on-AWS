@@ -14,15 +14,12 @@ import fs from "fs";
 // @ts-ignore
 if (!process.env.DATABASE_URL) {
     const possiblePaths = [];
-    if (typeof import.meta.dirname === "string") {
-        // @ts-ignore
-        possiblePaths.push(path.resolve(import.meta.dirname, "../.env"));
-    }
     const cwd = process.cwd();
     possiblePaths.push(path.resolve(cwd, ".env"));
     possiblePaths.push(path.resolve(cwd, "../../.env"));
     possiblePaths.push(path.resolve(cwd, "packages/prisma/.env"));
     possiblePaths.push(path.resolve(cwd, "../../packages/prisma/.env"));
+    possiblePaths.push(path.resolve(cwd, "../packages/prisma/.env"));
 
     for (const envPath of possiblePaths) {
         try {
@@ -34,7 +31,6 @@ if (!process.env.DATABASE_URL) {
                 }
             }
         } catch (e) {
-            // Ignore error
         }
     }
 }
