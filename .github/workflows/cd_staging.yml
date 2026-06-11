@@ -23,7 +23,7 @@ jobs:
             git pull origin main
             pnpm install
             pnpm run build
-            pm2 restart fe-sever || pm2 start npm --name "fe-sever" --cwd /home/ubuntu/Deploying-on-AWS/apps/web -- run start
-            pm2 restart http-sever || pm2 start dist/index.js --name "http-sever" --cwd /home/ubuntu/Deploying-on-AWS/apps/http-server
-            pm2 restart ws-sever || pm2 start dist/index.js --name "ws-sever" --cwd /home/ubuntu/Deploying-on-AWS/apps/websocket-server
+            pm2 restart next-server || pm2 start npm --name "next-server" --cwd /home/ubuntu/Deploying-on-AWS/apps/web -- run start
+            pm2 restart http-server || pm2 start dist/index.js --name "http-server" --cwd /home/ubuntu/Deploying-on-AWS/apps/http-server
+            pm2 restart websocket-server || pm2 start dist/index.js --name "websocket-server" --cwd /home/ubuntu/Deploying-on-AWS/apps/websocket-server
           EOF
