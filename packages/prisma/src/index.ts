@@ -9,10 +9,34 @@ import pg from "pg";
 import dotenv from "dotenv";
 import path from "path";
 
+import fs from "fs";
+
 // @ts-ignore
-if (!process.env.DATABASE_URL && typeof import.meta.dirname === "string") {
-    // @ts-ignore
-    dotenv.config({ path: path.resolve(import.meta.dirname, "../.env") });
+if (!process.env.DATABASE_URL) {
+    const possiblePaths = [];
+    if (typeof import.meta.dirname === "string") {
+        // @ts-ignore
+        possiblePaths.push(path.resolve(import.meta.dirname, "../.env"));
+    }
+    const cwd = process.cwd();
+    possiblePaths.push(path.resolve(cwd, ".env"));
+    possiblePaths.push(path.resolve(cwd, "../../.env"));
+    possiblePaths.push(path.resolve(cwd, "packages/prisma/.env"));
+    possiblePaths.push(path.resolve(cwd, "../../packages/prisma/.env"));
+
+    for (const envPath of possiblePaths) {
+        try {
+            if (fs.existsSync(envPath)) {
+                dotenv.config({ path: envPath });
+                if (process.env.DATABASE_URL) {
+                    console.log("Successfully loaded .env from:", envPath);
+                    break;
+                }
+            }
+        } catch (e) {
+            // Ignore error
+        }
+    }
 }
 
 const getPrismaClient = () => {
